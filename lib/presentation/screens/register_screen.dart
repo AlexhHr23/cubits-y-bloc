@@ -38,34 +38,67 @@ class _RegisterView extends StatelessWidget {
   }
 }
 
-class _RegiserForm extends StatelessWidget {
+class _RegiserForm extends StatefulWidget {
+  @override
+  State<_RegiserForm> createState() => _RegiserFormState();
+}
+
+class _RegiserFormState extends State<_RegiserForm> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String username = '';
+  String email = '';
+  String password = '';
+
   @override
   Widget build(BuildContext context) {
     return Form(
+      key: _formKey,
       child: Column(
         children: [
-
           CustomTextFormField(
             label: 'Nombre de usuario',
+            onChanged: (value) => username = value,
+            validator: (value) {
+              if (value == null || value.isEmpty) return 'Campo requerido';
+              if (value.trim().isEmpty) return 'Campo requerido';
+              if(value.length < 6) return 'Mas de 6 de letras';
+              return null;
+            },
           ),
-
           const SizedBox(height: 20),
-
           CustomTextFormField(
             label: 'Correo electrónico',
-          ),
+            onChanged: (value) => email = value,
+            validator: (value) {
+              if (value == null || value.isEmpty) return 'Campo requerido';
+              if (value.trim().isEmpty) return 'Campo requerido';
+              final emailRegExp = RegExp(
+                r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+              );
 
+              if(!emailRegExp.hasMatch(value)) return 'No tiene formato de correo';
+              return null;
+            },
+          ),
           const SizedBox(height: 20),
-          
           CustomTextFormField(
             label: 'Contraseña',
+            onChanged: (value) => password = value,
             obscureText: true,
+             validator: (value) {
+              if (value == null || value.isEmpty) return 'Campo requerido';
+              if (value.trim().isEmpty) return 'Campo requerido';
+              if(value.length < 6) return 'Mas de 6 de letras';
+              return null;
+            },
           ),
-          
           const SizedBox(height: 20),
-
           FilledButton.tonalIcon(
-            onPressed: () {},
+            onPressed: () {
+              final isvalid = _formKey.currentState!.validate();
+              if (!isvalid) return;
+              print('$username, $email, $password');
+            },
             icon: const Icon(Icons.save),
             label: const Text('Crear usuario'),
           ),
