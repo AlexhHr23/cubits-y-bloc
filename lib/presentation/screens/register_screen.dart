@@ -59,9 +59,7 @@ class _RegisterForm extends StatelessWidget {
           CustomTextFormField(
             label: 'Nombre de usuario',
             onChanged: registerCubit.usernameChanged,
-            errorMessage:  username.isPure || username.isValid
-              ? null
-              : 'usuario no valido',
+            errorMessage:  username.errorMessage
           ),
           const SizedBox(height: 20),
           CustomTextFormField(
@@ -84,16 +82,9 @@ class _RegisterForm extends StatelessWidget {
           const SizedBox(height: 20),
           CustomTextFormField(
             label: 'Contraseña',
-            onChanged: (value) {
-              registerCubit.passwordChanged(value);
-            },
+            onChanged: registerCubit.passwordChanged,
+            errorMessage: password.errorMessage,
             obscureText: true,
-            validator: (value) {
-              if (value == null || value.isEmpty) return 'Campo requerido';
-              if (value.trim().isEmpty) return 'Campo requerido';
-              if (value.length < 6) return 'Mas de 6 de letras';
-              return null;
-            },
           ),
           const SizedBox(height: 20),
           FilledButton.tonalIcon(
